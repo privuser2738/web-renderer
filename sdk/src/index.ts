@@ -10,8 +10,23 @@ import { PaginationEngine } from './pagination/engine.js';
 import { ImageOptimizer } from './images/optimizer.js';
 import { InputDetector } from './input/detector.js';
 import { DeviceDetector } from './core/device.js';
+import type {
+  IWebRerender,
+  WebRerenderConfig,
+  Modules,
+  DeviceInfo,
+  InputInfo,
+  WebRerenderEventType,
+  EventCallback,
+  UnsubscribeFn
+} from './types.js';
 
-class WebRerender {
+class WebRerender implements IWebRerender {
+  version: string;
+  initialized: boolean;
+  config: WebRerenderConfig | null;
+  modules: Partial<Modules>;
+
   constructor() {
     this.version = '1.0.0';
     this.initialized = false;
@@ -21,10 +36,8 @@ class WebRerender {
 
   /**
    * Initialize the Web Rerender SDK
-   * @param {Object} config - Configuration options
-   * @returns {Promise<WebRerender>}
    */
-  async init(config = {}) {
+  async init(config: WebRerenderConfig = {}): Promise<IWebRerender> {
     if (this.initialized) {
       console.warn('[WebRerender] Already initialized');
       return this;
@@ -59,7 +72,7 @@ class WebRerender {
   /**
    * Destroy the SDK instance
    */
-  destroy() {
+  destroy(): void {
     if (!this.initialized) return;
 
     Object.values(this.modules).forEach(module => {
@@ -76,49 +89,49 @@ class WebRerender {
   /**
    * Get current page information
    */
-  getCurrentPage() {
+  getCurrentPage(): number {
     return this.modules.pagination?.getCurrentPage() || 1;
   }
 
   /**
    * Navigate to a specific page
    */
-  goToPage(pageNumber) {
+  goToPage(pageNumber: number): boolean {
     return this.modules.pagination?.goToPage(pageNumber);
   }
 
   /**
    * Get total number of pages
    */
-  getTotalPages() {
+  getTotalPages(): number {
     return this.modules.pagination?.getTotalPages() || 1;
   }
 
   /**
    * Enable/disable image optimization
    */
-  setImageOptimization(enabled) {
+  setImageOptimization(enabled: boolean): void {
     return this.modules.images?.setEnabled(enabled);
   }
 
   /**
    * Get device information
    */
-  getDeviceInfo() {
+  getDeviceInfo(): DeviceInfo {
     return this.modules.device?.getInfo();
   }
 
   /**
    * Get input information
    */
-  getInputInfo() {
+  getInputInfo(): InputInfo {
     return this.modules.input?.getInfo();
   }
 
   /**
    * Merge user config with defaults
    */
-  _mergeConfig(userConfig) {
+  private _mergeConfig(userConfig: WebRerenderConfig): WebRerenderConfig {
     const defaults = {
       viewport: {
         mode: 'adaptive',
@@ -161,7 +174,7 @@ class WebRerender {
   /**
    * Deep merge objects
    */
-  _deepMerge(target, source) {
+  private _deepMerge(target: any, source: any): any {
     const output = { ...target };
 
     if (this._isObject(target) && this._isObject(source)) {
@@ -181,14 +194,14 @@ class WebRerender {
     return output;
   }
 
-  _isObject(item) {
+  private _isObject(item: any): boolean {
     return item && typeof item === 'object' && !Array.isArray(item);
   }
 
   /**
    * Event emitter
    */
-  _emit(event, data) {
+  private _emit(event: string, data: any): void {
     const customEvent = new CustomEvent(`webrerender:${event}`, {
       detail: data,
       bubbles: true
@@ -199,7 +212,7 @@ class WebRerender {
   /**
    * Listen to events
    */
-  on(event, callback) {
+  on<T extends WebRerenderEventType>(event: T, callback: EventCallback<T>): UnsubscribeFn {
     document.addEventListener(`webrerender:${event}`, callback);
     return () => document.removeEventListener(`webrerender:${event}`, callback);
   }
@@ -214,4 +227,3 @@ if (typeof window !== 'undefined') {
 }
 
 export default instance;
-export { WebRerender };

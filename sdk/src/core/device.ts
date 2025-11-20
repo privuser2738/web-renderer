@@ -2,7 +2,22 @@
  * Device Detector - Identifies device type, capabilities, and characteristics
  */
 
-export class DeviceDetector {
+import type {
+  DeviceInfo,
+  DeviceType,
+  OSType,
+  BrowserType,
+  ScreenInfo,
+  DeviceCapabilities,
+  ConnectionInfo,
+  PerformanceTier,
+  IDeviceDetector,
+  OrientationType
+} from '../types.js';
+
+export class DeviceDetector implements IDeviceDetector {
+  private info: DeviceInfo;
+
   constructor() {
     this.info = this._detect();
     this._setupListeners();
@@ -11,7 +26,7 @@ export class DeviceDetector {
   /**
    * Detect device information
    */
-  _detect() {
+  private _detect(): DeviceInfo {
     const ua = navigator.userAgent;
     const info = {
       type: this._detectType(ua),
@@ -30,7 +45,7 @@ export class DeviceDetector {
   /**
    * Detect device type
    */
-  _detectType(ua) {
+  private _detectType(ua: string): DeviceType {
     // Smart TV detection
     if (/TV|SmartTV|SMART-TV|Tizen|WebOS|NetCast|NETTV|HbbTV/i.test(ua)) {
       return 'tv';
@@ -53,7 +68,7 @@ export class DeviceDetector {
   /**
    * Detect operating system
    */
-  _detectOS(ua) {
+  private _detectOS(ua: string): OSType {
     if (/Windows/i.test(ua)) return 'windows';
     if (/Macintosh|Mac OS X/i.test(ua)) return 'macos';
     if (/Linux/i.test(ua)) return 'linux';
@@ -67,7 +82,7 @@ export class DeviceDetector {
   /**
    * Detect browser
    */
-  _detectBrowser(ua) {
+  private _detectBrowser(ua: string): BrowserType {
     if (/Edg/i.test(ua)) return 'edge';
     if (/Chrome/i.test(ua)) return 'chrome';
     if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) return 'safari';
@@ -80,7 +95,7 @@ export class DeviceDetector {
   /**
    * Get screen information
    */
-  _getScreenInfo() {
+  private _getScreenInfo(): ScreenInfo {
     return {
       width: window.screen.width,
       height: window.screen.height,
@@ -94,7 +109,7 @@ export class DeviceDetector {
   /**
    * Get orientation
    */
-  _getOrientation() {
+  private _getOrientation(): string {
     if (window.screen.orientation) {
       return window.screen.orientation.type;
     }
@@ -104,7 +119,7 @@ export class DeviceDetector {
   /**
    * Detect device capabilities
    */
-  _detectCapabilities() {
+  private _detectCapabilities(): DeviceCapabilities {
     return {
       touch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
       pointer: 'PointerEvent' in window,
@@ -124,7 +139,7 @@ export class DeviceDetector {
   /**
    * Detect WebGL support
    */
-  _detectWebGL() {
+  private _detectWebGL(): boolean {
     try {
       const canvas = document.createElement('canvas');
       return !!(
@@ -139,7 +154,7 @@ export class DeviceDetector {
   /**
    * Get connection information
    */
-  _getConnectionInfo() {
+  private _getConnectionInfo(): ConnectionInfo | null {
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     if (!conn) return null;
 
@@ -154,7 +169,7 @@ export class DeviceDetector {
   /**
    * Setup event listeners for changes
    */
-  _setupListeners() {
+  private _setupListeners(): void {
     // Orientation change
     window.addEventListener('orientationchange', () => {
       this.info.screen.orientation = this._getOrientation();
@@ -184,28 +199,28 @@ export class DeviceDetector {
   /**
    * Get device information
    */
-  getInfo() {
+  getInfo(): DeviceInfo {
     return { ...this.info };
   }
 
   /**
    * Check if device is a specific type
    */
-  is(type) {
+  is(type: DeviceType): boolean {
     return this.info.type === type;
   }
 
   /**
    * Check if device has a capability
    */
-  has(capability) {
+  has(capability: keyof DeviceCapabilities): boolean {
     return !!this.info.capabilities[capability];
   }
 
   /**
    * Get performance tier (for adaptive quality)
    */
-  getPerformanceTier() {
+  getPerformanceTier(): PerformanceTier {
     const { type, connection, screen } = this.info;
 
     // Smart TV: usually high-end but may have slower connections
@@ -233,7 +248,7 @@ export class DeviceDetector {
   /**
    * Emit events
    */
-  _emit(event, data) {
+  private _emit(event: string, data: any): void {
     const customEvent = new CustomEvent(`webrerender:device:${event}`, {
       detail: data,
       bubbles: true
@@ -244,7 +259,7 @@ export class DeviceDetector {
   /**
    * Cleanup
    */
-  destroy() {
+  destroy(): void {
     // Event listeners are on window/navigator, will be cleaned up automatically
   }
 }

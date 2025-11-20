@@ -3,8 +3,12 @@
  * Packages the extension for distribution
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log('Building Web Rerender Extension...\n');
 
@@ -66,7 +70,7 @@ if (!fs.existsSync(iconsDir)) {
 }
 
 // Get package version
-const packageJson = require('../package.json');
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 const version = packageJson.version;
 
 console.log(`\n✓ Extension build complete (v${version})`);
