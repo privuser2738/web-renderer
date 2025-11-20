@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Rerender - Basic Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 48px;
+      margin: 0 0 16px 0;
+    }
+
+    header p {
+      font-size: 20px;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #667eea;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin: 30px 0 15px 0;
+    }
+
+    p {
+      margin-bottom: 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .feature-card {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .feature-card h3 {
+      margin-top: 0;
+      color: #667eea;
+    }
+
+    .image-demo {
+      margin: 40px 0;
+    }
+
+    .image-demo img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .code-block code {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+    }
+
+    footer {
+      background: #1e293b;
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Web Rerender SDK</h1>
+    <p>Adaptive rendering for the modern web</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Welcome to Web Rerender</h2>
+      <p>
+        This example demonstrates the Web Rerender SDK in action. Instead of scrolling through this entire page,
+        the content is automatically divided into viewport-sized pages that you can navigate through.
+      </p>
+      <p>
+        Try using the pagination controls in the bottom-right corner, or use your keyboard:
+      </p>
+      <ul>
+        <li><strong>Arrow Right / Space / Page Down</strong> - Next page</li>
+        <li><strong>Arrow Left / Page Up</strong> - Previous page</li>
+        <li><strong>Home</strong> - First page</li>
+        <li><strong>End</strong> - Last page</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Core Features</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>🎯 Pagination</h3>
+          <p>
+            Automatically converts scrollable content into paginated views. Supports automatic viewport-based
+            breaking, intelligent semantic breakpoints, and manual developer control.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>📱 Multi-Device</h3>
+          <p>
+            Works seamlessly across desktop, mobile, tablet, and smart TV. Automatically detects device
+            characteristics and adjusts rendering accordingly.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>🎮 Multi-Input</h3>
+          <p>
+            Detects and optimizes for mouse, keyboard, touch, pen, and pointer input. Adjusts UI elements
+            and interactions based on the primary input type.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>🖼️ Image Optimization</h3>
+          <p>
+            Lazy loading, adaptive quality based on device and connection, user controls, and automatic
+            optimization for performance-critical scenarios.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>🚨 Emergency Mode</h3>
+          <p>
+            Automatically detects problematic pages (excessive content, too many images/videos, conflicts)
+            and applies fixes to ensure stable rendering.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>⚡ Zero Dependencies</h3>
+          <p>
+            Pure vanilla JavaScript with no external dependencies. Works with any framework or no framework
+            at all. Enterprise-grade code quality.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How It Works</h2>
+
+      <h3>1. Include the SDK</h3>
+      <div class="code-block">
+        <code>&lt;script src="web-rerender.js"&gt;&lt;/script&gt;</code>
+      </div>
+
+      <h3>2. Initialize</h3>
+      <div class="code-block">
+        <code>WebRerender.init({
+  pagination: { mode: 'intelligent' },
+  images: { quality: 'adaptive' }
+});</code>
+      </div>
+
+      <h3>3. That's It!</h3>
+      <p>
+        The SDK automatically detects your device, analyzes your page content, and applies optimal rendering
+        strategies. No additional configuration required.
+      </p>
+    </section>
+
+    <section class="image-demo">
+      <h2>Image Optimization</h2>
+      <p>
+        Images are automatically optimized based on your device and connection. The SDK applies lazy loading,
+        quality adjustment, and provides user controls.
+      </p>
+
+      <!-- These would be real images in production -->
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 300px; border-radius: 8px; margin-bottom: 20px;"></div>
+      <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 300px; border-radius: 8px; margin-bottom: 20px;"></div>
+      <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 300px; border-radius: 8px; margin-bottom: 20px;"></div>
+    </section>
+
+    <section>
+      <h2>Device Detection</h2>
+      <p>
+        The SDK detects your device type, operating system, browser, screen size, and capabilities.
+        This information is used to optimize the rendering experience.
+      </p>
+
+      <div id="deviceInfo" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>Device Type:</strong> <span id="deviceType">Detecting...</span></p>
+        <p><strong>Operating System:</strong> <span id="deviceOS">Detecting...</span></p>
+        <p><strong>Browser:</strong> <span id="deviceBrowser">Detecting...</span></p>
+        <p><strong>Screen:</strong> <span id="deviceScreen">Detecting...</span></p>
+        <p><strong>Primary Input:</strong> <span id="primaryInput">Detecting...</span></p>
+      </div>
+    </section>
+
+    <section>
+      <h2>API Reference</h2>
+
+      <h3>Navigation Methods</h3>
+      <div class="code-block">
+        <code>WebRerender.goToPage(3);      // Go to page 3
+WebRerender.nextPage();         // Next page
+WebRerender.prevPage();         // Previous page
+WebRerender.getCurrentPage();   // Get current page number
+WebRerender.getTotalPages();    // Get total pages</code>
+      </div>
+
+      <h3>Device Information</h3>
+      <div class="code-block">
+        <code>const device = WebRerender.getDeviceInfo();
+const input = WebRerender.getInputInfo();</code>
+      </div>
+
+      <h3>Image Control</h3>
+      <div class="code-block">
+        <code>WebRerender.setImageOptimization(false);  // Disable
+WebRerender.setImageOptimization(true);   // Enable</code>
+      </div>
+    </section>
+
+    <section>
+      <h2>Events</h2>
+      <p>
+        Listen to SDK events to react to page changes, device changes, and more.
+      </p>
+
+      <div class="code-block">
+        <code>WebRerender.on('pagination:pagechanged', (e) => {
+  console.log('Page changed:', e.detail);
+});
+
+WebRerender.on('device:orientationchange', (e) => {
+  console.log('Orientation changed:', e.detail);
+});
+
+WebRerender.on('input:changed', (e) => {
+  console.log('Input type changed:', e.detail);
+});</code>
+      </div>
+    </section>
+
+    <section>
+      <h2>Browser Support</h2>
+      <ul>
+        <li>Chrome/Edge 90+</li>
+        <li>Firefox 88+</li>
+        <li>Safari 14+</li>
+        <li>Smart TVs with modern browsers</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Get Started</h2>
+      <p>
+        Ready to use Web Rerender in your project? Check out the documentation and download the SDK.
+      </p>
+
+      <div style="margin: 40px 0; text-align: center;">
+        <button style="
+          background: #667eea;
+          color: white;
+          border: none;
+          padding: 16px 32px;
+          font-size: 18px;
+          border-radius: 8px;
+          cursor: pointer;
+          margin: 0 10px;
+        " onclick="alert('Visit the GitHub repository for downloads and documentation!')">
+          Download SDK
+        </button>
+
+        <button style="
+          background: white;
+          color: #667eea;
+          border: 2px solid #667eea;
+          padding: 14px 32px;
+          font-size: 18px;
+          border-radius: 8px;
+          cursor: pointer;
+          margin: 0 10px;
+        " onclick="alert('View the full documentation in the SDK README!')">
+          View Documentation
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Web Rerender. Licensed under MIT.</p>
+  </footer>
+
+  <!-- Include the SDK -->
+  <script src="../sdk/dist/web-rerender.js"></script>
+
+  <!-- Initialize -->
+  <script>
+    (async function() {
+      // Initialize SDK
+      await WebRerender.init({
+        pagination: {
+          mode: 'intelligent',
+          breakpoints: 'semantic',
+          controls: {
+            enabled: true,
+            position: 'bottom-right',
+            keyboard: true
+          }
+        },
+        images: {
+          lazyLoad: true,
+          quality: 'adaptive',
+          userControl: true
+        },
+        debug: true
+      });
+
+      // Update device info
+      const deviceInfo = WebRerender.getDeviceInfo();
+      const inputInfo = WebRerender.getInputInfo();
+
+      document.getElementById('deviceType').textContent = deviceInfo.type;
+      document.getElementById('deviceOS').textContent = deviceInfo.os;
+      document.getElementById('deviceBrowser').textContent = deviceInfo.browser;
+      document.getElementById('deviceScreen').textContent =
+        `${deviceInfo.screen.width}x${deviceInfo.screen.height} (${deviceInfo.screen.orientation})`;
+      document.getElementById('primaryInput').textContent = inputInfo.primary;
+
+      // Listen to events
+      WebRerender.on('pagination:pagechanged', (e) => {
+        console.log('Page changed:', e.detail);
+      });
+
+      console.log('Web Rerender initialized!');
+      console.log('Total pages:', WebRerender.getTotalPages());
+    })();
+  </script>
+</body>
+</html>

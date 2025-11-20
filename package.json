@@ -1,0 +1,31 @@
+{
+  "name": "@web-rerender/core",
+  "version": "1.0.0",
+  "description": "Enterprise-grade SDK and browser extension for adaptive web rendering across all devices and input types",
+  "main": "sdk/dist/web-rerender.js",
+  "module": "sdk/dist/web-rerender.esm.js",
+  "types": "sdk/dist/index.d.ts",
+  "scripts": {
+    "build:sdk": "rollup -c rollup.config.js",
+    "build:extension": "node scripts/build-extension.js",
+    "build": "npm run build:sdk && npm run build:extension",
+    "dev": "rollup -c rollup.config.js -w",
+    "test": "jest",
+    "lint": "eslint sdk/ extension/"
+  },
+  "keywords": [
+    "responsive",
+    "adaptive",
+    "pagination",
+    "accessibility",
+    "multi-device",
+    "viewport",
+    "rendering"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.9.0"
+  }
+}

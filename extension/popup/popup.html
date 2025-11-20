@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Rerender</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="header">
+      <h1>Web Rerender</h1>
+      <div class="status" id="status">
+        <span class="status-dot"></span>
+        <span class="status-text">Active</span>
+      </div>
+    </header>
+
+    <div class="page-info" id="pageInfo">
+      <div class="info-item">
+        <span class="label">Current Page:</span>
+        <span class="value" id="currentPage">-</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Total Pages:</span>
+        <span class="value" id="totalPages">-</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Device:</span>
+        <span class="value" id="device">-</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label class="switch">
+          <input type="checkbox" id="enabledToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">Enable Web Rerender</span>
+      </div>
+
+      <div class="control-group">
+        <label class="switch">
+          <input type="checkbox" id="paginationToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">Pagination</span>
+      </div>
+
+      <div class="control-group">
+        <label class="switch">
+          <input type="checkbox" id="imageOptToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">Image Optimization</span>
+      </div>
+
+      <div class="control-group">
+        <label class="switch">
+          <input type="checkbox" id="emergencyToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">Auto-fix Issues</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="reloadBtn">Reload Page</button>
+      <button class="btn btn-secondary" id="settingsBtn">Settings</button>
+    </div>
+
+    <footer class="footer">
+      <a href="#" id="helpLink">Help</a>
+      <span class="divider">|</span>
+      <a href="#" id="aboutLink">About</a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

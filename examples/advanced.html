@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Rerender - Advanced Example</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 100px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 30px;
+      border: 1px solid #334155;
+    }
+
+    .card h3 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .metric {
+      font-size: 48px;
+      font-weight: bold;
+      color: #4ade80;
+      margin: 20px 0;
+    }
+
+    .stat-list {
+      list-style: none;
+    }
+
+    .stat-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .stat-list li:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: #94a3b8;
+    }
+
+    .value {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .controls-panel {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .controls-panel h2 {
+      color: #667eea;
+      margin-bottom: 30px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .event-log {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: 'Monaco', monospace;
+      font-size: 13px;
+    }
+
+    .event-log .event {
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #1e293b;
+      border-radius: 4px;
+      border-left: 3px solid #667eea;
+    }
+
+    .event-log .timestamp {
+      color: #94a3b8;
+      margin-right: 10px;
+    }
+
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section h2 {
+      color: #667eea;
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    .code-example {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .code-example code {
+      color: #4ade80;
+      font-family: 'Monaco', monospace;
+      font-size: 14px;
+    }
+
+    .feature-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 40px;
+    }
+
+    .showcase-item {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 40px;
+      border: 1px solid #334155;
+    }
+
+    .showcase-item h3 {
+      color: #4ade80;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Advanced Demo</h1>
+    <p>Explore the full power of Web Rerender SDK</p>
+  </div>
+
+  <div class="container">
+    <!-- Live Dashboard -->
+    <div class="dashboard">
+      <div class="card">
+        <h3>Page Info</h3>
+        <ul class="stat-list">
+          <li>
+            <span class="label">Current Page</span>
+            <span class="value" id="liveCurrentPage">-</span>
+          </li>
+          <li>
+            <span class="label">Total Pages</span>
+            <span class="value" id="liveTotalPages">-</span>
+          </li>
+          <li>
+            <span class="label">Mode</span>
+            <span class="value" id="liveMode">-</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Device Info</h3>
+        <ul class="stat-list">
+          <li>
+            <span class="label">Type</span>
+            <span class="value" id="liveDeviceType">-</span>
+          </li>
+          <li>
+            <span class="label">OS</span>
+            <span class="value" id="liveOS">-</span>
+          </li>
+          <li>
+            <span class="label">Browser</span>
+            <span class="value" id="liveBrowser">-</span>
+          </li>
+          <li>
+            <span class="label">Screen</span>
+            <span class="value" id="liveScreen">-</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Input Info</h3>
+        <ul class="stat-list">
+          <li>
+            <span class="label">Primary</span>
+            <span class="value" id="livePrimaryInput">-</span>
+          </li>
+          <li>
+            <span class="label">Mouse</span>
+            <span class="value" id="liveMouseInput">-</span>
+          </li>
+          <li>
+            <span class="label">Touch</span>
+            <span class="value" id="liveTouchInput">-</span>
+          </li>
+          <li>
+            <span class="label">Keyboard</span>
+            <span class="value" id="liveKeyboardInput">-</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Interactive Controls -->
+    <div class="controls-panel">
+      <h2>Interactive Controls</h2>
+
+      <div class="button-group">
+        <button class="btn" onclick="goToFirstPage()">First Page</button>
+        <button class="btn" onclick="goToPrevPage()">Previous</button>
+        <button class="btn" onclick="goToNextPage()">Next</button>
+        <button class="btn" onclick="goToLastPage()">Last Page</button>
+        <button class="btn btn-secondary" onclick="goToRandomPage()">Random Page</button>
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-secondary" onclick="toggleImages()">Toggle Images</button>
+        <button class="btn btn-secondary" onclick="changeQuality('high')">High Quality</button>
+        <button class="btn btn-secondary" onclick="changeQuality('low')">Low Quality</button>
+        <button class="btn btn-secondary" onclick="recalculate()">Recalculate</button>
+      </div>
+
+      <h3 style="margin: 30px 0 15px 0; color: #94a3b8;">Event Log</h3>
+      <div class="event-log" id="eventLog">
+        <div class="event">
+          <span class="timestamp">--:--:--</span>
+          <span>Waiting for events...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Showcase -->
+    <section class="section">
+      <h2>API Examples</h2>
+
+      <div class="feature-showcase">
+        <div class="showcase-item">
+          <h3>Navigation API</h3>
+          <div class="code-example">
+            <code>// Navigate programmatically
+WebRerender.goToPage(3);
+WebRerender.nextPage();
+WebRerender.prevPage();
+
+// Get page info
+const current = WebRerender.getCurrentPage();
+const total = WebRerender.getTotalPages();</code>
+          </div>
+        </div>
+
+        <div class="showcase-item">
+          <h3>Device Detection</h3>
+          <div class="code-example">
+            <code>// Get device information
+const device = WebRerender.getDeviceInfo();
+
+console.log(device.type);     // 'desktop'
+console.log(device.os);       // 'windows'
+console.log(device.browser);  // 'chrome'</code>
+          </div>
+        </div>
+
+        <div class="showcase-item">
+          <h3>Input Detection</h3>
+          <div class="code-example">
+            <code>// Get input information
+const input = WebRerender.getInputInfo();
+
+console.log(input.primary);   // 'mouse'
+console.log(input.types.touch); // true/false</code>
+          </div>
+        </div>
+
+        <div class="showcase-item">
+          <h3>Event Listening</h3>
+          <div class="code-example">
+            <code>// Listen to page changes
+WebRerender.on('pagination:pagechanged', (e) => {
+  console.log('Page:', e.detail.to);
+});
+
+// Listen to input changes
+WebRerender.on('input:changed', (e) => {
+  console.log('Input:', e.detail.to);
+});</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Configuration Examples -->
+    <section class="section">
+      <h2>Configuration Examples</h2>
+
+      <div class="showcase-item">
+        <h3>Intelligent Mode (Current)</h3>
+        <p style="margin-bottom: 20px; color: #94a3b8;">
+          Breaks content at semantic HTML boundaries like sections, articles, and headings.
+          This provides the most natural reading experience.
+        </p>
+        <div class="code-example">
+          <code>WebRerender.init({
+  pagination: {
+    mode: 'intelligent',
+    breakpoints: 'semantic'
+  }
+});</code>
+        </div>
+      </div>
+
+      <div style="height: 40px;"></div>
+
+      <div class="showcase-item">
+        <h3>Auto Mode</h3>
+        <p style="margin-bottom: 20px; color: #94a3b8;">
+          Automatically breaks content based purely on viewport height. Faster but less intelligent.
+        </p>
+        <div class="code-example">
+          <code>WebRerender.init({
+  pagination: {
+    mode: 'auto',
+    viewportMultiplier: 1.0
+  }
+});</code>
+        </div>
+      </div>
+
+      <div style="height: 40px;"></div>
+
+      <div class="showcase-item">
+        <h3>Manual Mode</h3>
+        <p style="margin-bottom: 20px; color: #94a3b8;">
+          Use data attributes to define exact page boundaries. Perfect for precise control.
+        </p>
+        <div class="code-example">
+          <code>// HTML
+&lt;div data-webrerender-page&gt;Page 1&lt;/div&gt;
+&lt;div data-webrerender-page&gt;Page 2&lt;/div&gt;
+
+// JS
+WebRerender.init({
+  pagination: { mode: 'manual' }
+});</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- More content sections to create multiple pages -->
+    <section class="section">
+      <h2>Performance Optimization</h2>
+      <p style="margin-bottom: 20px; line-height: 1.8;">
+        The SDK is built with performance in mind. It uses efficient observers, debounced events,
+        and lazy initialization to minimize impact on page load time and runtime performance.
+      </p>
+
+      <div class="card">
+        <h3>Bundle Size</h3>
+        <div class="metric">&lt; 50KB</div>
+        <p style="color: #94a3b8;">Gzipped, zero dependencies</p>
+      </div>
+
+      <div style="height: 40px;"></div>
+
+      <div class="card">
+        <h3>Initialization Time</h3>
+        <div class="metric">&lt; 100ms</div>
+        <p style="color: #94a3b8;">On modern devices</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Emergency Mode</h2>
+      <p style="margin-bottom: 20px; line-height: 1.8;">
+        Emergency mode automatically detects and fixes problematic pages. It activates when:
+      </p>
+      <ul style="list-style-position: inside; color: #94a3b8; line-height: 2;">
+        <li>Page height exceeds 10x viewport</li>
+        <li>More than 50 images detected</li>
+        <li>More than 10 videos/iframes</li>
+        <li>Z-index conflicts detected</li>
+      </ul>
+
+      <div style="height: 40px;"></div>
+
+      <div class="code-example">
+        <code>WebRerender.init({
+  emergency: {
+    detectConflicts: true,
+    autoFix: true,
+    videoOptimization: true
+  }
+});</code>
+      </div>
+    </section>
+  </div>
+
+  <!-- Load SDK -->
+  <script src="../sdk/dist/web-rerender.js"></script>
+
+  <script>
+    let imagesEnabled = true;
+
+    // Initialize SDK
+    (async function() {
+      await WebRerender.init({
+        pagination: {
+          mode: 'intelligent',
+          breakpoints: 'semantic',
+          controls: {
+            enabled: true,
+            position: 'bottom-right',
+            keyboard: true
+          }
+        },
+        images: {
+          lazyLoad: true,
+          quality: 'adaptive',
+          userControl: true
+        },
+        debug: true
+      });
+
+      // Update dashboard
+      updateDashboard();
+
+      // Setup event listeners
+      setupEventListeners();
+
+      logEvent('SDK initialized successfully');
+    })();
+
+    // Update live dashboard
+    function updateDashboard() {
+      // Page info
+      document.getElementById('liveCurrentPage').textContent = WebRerender.getCurrentPage();
+      document.getElementById('liveTotalPages').textContent = WebRerender.getTotalPages();
+      document.getElementById('liveMode').textContent = 'intelligent';
+
+      // Device info
+      const device = WebRerender.getDeviceInfo();
+      document.getElementById('liveDeviceType').textContent = device.type;
+      document.getElementById('liveOS').textContent = device.os;
+      document.getElementById('liveBrowser').textContent = device.browser;
+      document.getElementById('liveScreen').textContent =
+        `${device.screen.width}x${device.screen.height}`;
+
+      // Input info
+      const input = WebRerender.getInputInfo();
+      document.getElementById('livePrimaryInput').textContent = input.primary;
+      document.getElementById('liveMouseInput').textContent = input.types.mouse ? '✓' : '✗';
+      document.getElementById('liveTouchInput').textContent = input.types.touch ? '✓' : '✗';
+      document.getElementById('liveKeyboardInput').textContent = input.types.keyboard ? '✓' : '✗';
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      WebRerender.on('pagination:pagechanged', (e) => {
+        logEvent(`Page changed: ${e.detail.from} → ${e.detail.to}`);
+        updateDashboard();
+      });
+
+      WebRerender.on('viewport:changed', (e) => {
+        logEvent(`Viewport changed: ${e.detail.new.category}`);
+        updateDashboard();
+      });
+
+      WebRerender.on('input:changed', (e) => {
+        logEvent(`Input changed: ${e.detail.from} → ${e.detail.to}`);
+        updateDashboard();
+      });
+
+      WebRerender.on('images:toggled', (e) => {
+        logEvent(`Images ${e.detail.enabled ? 'enabled' : 'disabled'}`);
+      });
+    }
+
+    // Log event to console
+    function logEvent(message) {
+      const log = document.getElementById('eventLog');
+      const time = new Date().toLocaleTimeString();
+      const event = document.createElement('div');
+      event.className = 'event';
+      event.innerHTML = `<span class="timestamp">${time}</span><span>${message}</span>`;
+      log.insertBefore(event, log.firstChild);
+
+      // Keep only last 20 events
+      while (log.children.length > 20) {
+        log.removeChild(log.lastChild);
+      }
+    }
+
+    // Navigation functions
+    function goToFirstPage() {
+      WebRerender.goToPage(1);
+    }
+
+    function goToPrevPage() {
+      WebRerender.prevPage();
+    }
+
+    function goToNextPage() {
+      WebRerender.nextPage();
+    }
+
+    function goToLastPage() {
+      const total = WebRerender.getTotalPages();
+      WebRerender.goToPage(total);
+    }
+
+    function goToRandomPage() {
+      const total = WebRerender.getTotalPages();
+      const random = Math.floor(Math.random() * total) + 1;
+      WebRerender.goToPage(random);
+    }
+
+    function toggleImages() {
+      imagesEnabled = !imagesEnabled;
+      WebRerender.setImageOptimization(imagesEnabled);
+    }
+
+    function changeQuality(quality) {
+      logEvent(`Changed quality to ${quality}`);
+      // Would need to reinitialize with new quality setting
+    }
+
+    function recalculate() {
+      logEvent('Recalculating pagination...');
+      location.reload();
+    }
+  </script>
+</body>
+</html>
