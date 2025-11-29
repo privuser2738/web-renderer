@@ -5,7 +5,9 @@
       "Bash(npm run build:sdk:*)",
       "Bash(npm run build:extension:*)",
       "Bash(node scripts/create-placeholder-icons.js:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
